@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theatre Registration</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background: linear-gradient(to right, #000000, #222, #000);
+            color: #e2e8f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            transition: all 0.2s ease-in-out;
+            font-size: 1rem;
+        }
+
+        .card {
+            background-color: #1e232a;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            box-shadow:  0 6px 12px -2px rgba(0, 0, 0, 0.15), 0 3px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-in-out;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        /* Form Styles */
+        .form-control, .form-select {
+            background-color: white;
+            border: 1px solid #475569;
+            color: black;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease-in-out;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #2a2b2c;
+            border-color: #5b21b6;
+            box-shadow: 0 0 0 4px rgba(91, 33, 182, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+            color: #e2e8f0;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        .form-label {
+            color: #e2e8f0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-check-input {
+            background-color: #2a2b2c;
+            border: 2px solid #475569;
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 4px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-check-input:checked {
+            background-color: #5b21b6;
+            border-color: #5b21b6;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+        }
+
+        .form-check-label {
+            color: #e2e8f0;
+            font-size: 0.95rem;
+        }
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(45deg, #5b21b6, #a78bfa);
+            border: none;
+            border-radius: 10px;
+            padding: 0.85rem 1.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease-in-out;
+            box-shadow:  0 6px 12px -2px rgba(0, 0, 0, 0.15), 0 3px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background: linear-gradient(45deg, #4c1d95, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(91, 33, 182, 0.3);
+        }
+
+        .btn-outline-secondary {
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 0.85rem 1.75rem;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #64748b;
+            color: #1e232a;
+            border-color: #64748b;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* Typography */
+        h2.fw-bold {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #e2e8f0;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.025em;
+        }
+
+        h3.fs-5 {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 1.75rem;
+        }
+
+        .text-muted {
+            color: #94a3b8 !important;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .theme-toggle .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #334155;
+            transition: all 0.2s ease-in-out;
+            border-radius: 24px;
+        }
+
+        .theme-toggle .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: #1e232a;
+            transition: all 0.2s ease-in-out;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-toggle input:checked + .slider {
+            background-color: #5b21b6;
+        }
+
+        .theme-toggle input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Theme Switching Logic */
+        body:has(.theme-toggle input:checked) {
+            --bg-color: #f8fafc;
+            --bg-gradient: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #d1d5db;
+            --input-bg: #ffffff;
+            --input-border: #d1d5db;
+            --input-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Accessibility */
+        :focus-visible {
+            outline: 3px solid #5b21b6;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.25rem;
+            }
+
+            .card-body {
+                padding: 1.75rem;
+            }
+
+            h2.fw-bold {
+                font-size: 1.875rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .photo-upload-area {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 1.75rem;
+            }
+
+            .theme-toggle {
+                width: 40px;
+                height: 20px;
+            }
+
+            .theme-toggle .slider:before {
+                height: 16px;
+                width: 16px;
+                bottom: 2px;
+                left: 2px;
+            }
+
+            .theme-toggle input:checked + .slider:before {
+                transform: translateX(20px);
+            }
+        }
+        .back-button {
+            position: sticky;
+            top: 10px;
+            left: 15%;
+            width: 70%;
+            margin: auto;
+            overflow: hidden;
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: gray;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            z-index: 5;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: gold;
+            color: white;
+        }
+        .button-text {
+            display: none;
+        }
+        .back-button:hover .button-text {
+            width: 60px;
+            opacity: 1;
+            display: inline;
+        }
+
+        .button-icon {
+            width: 25px;
+            height: 25px;
+        }
+
+        .button-text {
+            width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <button
+    class="back-button"
+    onclick="window.history.back()"
+    aria-label="Go back"
+  >
+    <i class="fa-solid fa-backward"></i>
+    <span class="button-text">Go Back</span>
+  </button>
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="mb-5 fade-in">
+                    <h2 class="fw-bold">Update Your Theatre</h2>
+                    <p class="text-muted">Manage the details below to update your theatre on MOOOWE.</p>
+                </div>
+
+                <div class="card fade-in">
+                    <div class="card-body">
+                        <form id="theatre-form" method="post">
+                            {% csrf_token %}
+                            <div class="mb-5">
+                                <div class="col-md-6 mb-3">
+                                    <label for="t-image" class="form-label">Theatre Image</label>
+                                    <input type="file" class="form-control" id="t-image" name="image" value="{{theatre.theatre_image}}" placeholder="Enter theatre image"  required>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 mb-3">
+                                    <label for="theatre-name" class="form-label">Theatre Name</label>
+                                    <input type="text" class="form-control" id="theatre-name" name="theatre-name" value="{{theatre.name}}" placeholder="Enter theatre name" required>
+                                </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6 mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location" value="{{theatre.location}}" placeholder="Enter theatre location" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="capacity" class="form-label">Total Capacity</label>
+                                    <input type="number" class="form-control" id="capacity" name="capacity" value="{{theatre.capacity}}" placeholder="Enter total capacity" required>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <h3 class="fs-5 fw-bold mb-3">Seating Tiers</h3>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="gold-seats" class="form-label">Gold Seats</label>
+                                        <input type="number" class="form-control" name="gold-seats" id="gold-seats" value="{{theatre.gold_seats}}" placeholder="Number of gold seats" required>
+                                        <label for="gold-price" class="form-label mt-2">Gold Ticket Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#8377</span>
+                                            <input type="number" class="form-control" id="gold-price" name="gold-price" value="{{theatre.gold_price}}" placeholder="Price per ticket" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="silver-seats" class="form-label">Silver Seats</label>
+                                        <input type="number" class="form-control" name="silver-seats" id="silver-seats" value="{{theatre.silver_seats}}" placeholder="Number of silver seats" required>
+                                        <label for="silver-price" class="form-label mt-2">Silver Ticket Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#8377</span>
+                                            <input type="number" class="form-control" name="silver-price" id="silver-price" value="{{theatre.silver_price}}" placeholder="Price per ticket" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="bronze-seats" class="form-label">Bronze Seats</label>
+                                        <input type="number" class="form-control" id="bronze-seats" name="bronze-seats" value="{{theatre.bronze_seats}}" placeholder="Number of bronze seats" required>
+                                        <label for="bronze-price" class="form-label mt-2">Bronze Ticket Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#8377</span>
+                                            <input type="number" class="form-control" id="bronze-price" name="bronze-price" value="{{theatre.bronze_price}}" placeholder="Price per ticket" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end gap-3">
+                                <button type="submit" class="btn btn-primary">Update Theatre</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

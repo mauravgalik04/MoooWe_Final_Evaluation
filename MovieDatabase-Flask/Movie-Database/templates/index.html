@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoooWe</title>
+    <link rel="stylesheet" href="{{url_for('static' , filename  = '/css/index.css')}}">
+</head>
+<body>
+    {%extends 'base.html'%}
+    {%block content%}
+    <main>
+        <div id="mainContainer">
+            <div class="mainsecs">
+                <h1 id="mainsec-heading">Welcome to <span id="main-sec-title">MoooWe</span></h1>
+                <p><strong>your ultimate movie database! Explore thousands of films, from classics to new releases, with ratings, reviews, and recommendations. Your cinematic journey starts here!🎬🍿</strong></p>
+            </div>
+            <div class="mainsecs">
+                <img src="{{url_for('static', filename = 'images/'+image)}}" id="main-sec-image" alt="" style="border-radius: 10px;">
+            </div>
+        </div>
+
+        <section class="movie-carousel">
+            <div class="container">
+                <h2 class="section-title fade-in">Trending Movies</h2>
+                <div class="carousel-container fade-in">
+                    <div class="carousel-track">
+                        <div class="carousel-card">
+                            <img src="{{url_for('static' , filename = 'images/inception-landscape.jpg')}}" alt="Movie 1">
+                            <div class="carousel-content">
+                                <h3>Inception</h3>
+                                <p>Sci-Fi/Action</p>
+                            </div>
+                        </div>
+                        <div class="carousel-card">
+                            <img src="{{url_for('static' , filename = 'images/dark-knight-landscape.jpg')}}" alt="Movie 2">
+
+                            <div class="carousel-content">
+                                <h3>The Dark Knight</h3>
+                                <p>Action/Drama</p>
+                            </div>
+                        </div>
+                        <div class="carousel-card">
+                            <img src="{{url_for('static' , filename = 'images/login-4.jpg')}}" alt="Movie 2">
+
+                            <div class="carousel-content">
+                                <h3>Avengers Endgame</h3>
+                                <p>Action/Adventure</p>
+                            </div>
+                        </div>
+                        <div class="carousel-card">
+                            <img src="{{url_for('static' , filename = 'images/login-6.jpg')}}" alt="Movie 2">
+
+                            <div class="carousel-content">
+                                <h3>The Nun</h3>
+                                <p>Horror</p>
+                            </div>
+                        </div>
+                        <div class="carousel-card">
+                            <img src="{{url_for('static' , filename = 'images/interstellar-landscape.jpg')}}" alt="Movie 3">
+                            <div class="carousel-content">
+                                <h3>Interstellar</h3>
+                                <p>Sci-Fi/Adventure</p>
+                            </div>
+                        </div>
+                        <div class="carousel-card">
+                            <img src="{{url_for('static' , filename = 'images/' +'pulp-fiction-landscape.jpg')}}" alt="Movie 4">
+                            <div class="carousel-content">
+                                <h3>Pulp Fiction</h3>
+                                <p>Crime/Drama</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title fade-in">Why Choose MoooWe?</h2>
+                <div class="feature-grid">
+                    <div class="feature-card fade-in-up" style="animation-delay: 0.2s">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none">
+                                <path d="M19.82 2H4.18C2.97 2 2 2.97 2 4.18v15.64C2 21.03 2.97 22 4.18 22h15.64c1.21 0 2.18-.97 2.18-2.18V4.18C22 2.97 21.03 2 19.82 2z"/>
+                                <path d="M7 2v20"/>
+                                <path d="M17 2v20"/>
+                                <path d="M2 12h20"/>
+                                <path d="M2 7h5"/>
+                                <path d="M2 17h5"/>
+                                <path d="M17 17h5"/>
+                                <path d="M17 7h5"/>
+                            </svg>
+                        </div>
+                        <h3>Extensive Database</h3>
+                        <p>Access a vast collection of movies and genres from all eras.</p>
+                    </div>
+                    <div class="feature-card fade-in-up" style="animation-delay: 0.4s">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </div>
+                        <h3>Top Recommendations</h3>
+                        <p>Get personalized recommendations based on your preferences.</p>
+                    </div>
+                    <div class="feature-card fade-in-up" style="animation-delay: 0.6s">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <h3>Upcoming Releases</h3>
+                        <p>Stay updated with the latest movie and genre release dates.</p>
+                    </div>
+                </div>
+            </div>
+</section>
+    </main>
+    {%endblock%}
+</body>
+</html>

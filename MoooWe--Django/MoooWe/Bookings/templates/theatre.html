@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Seat Selection</title>
+    <style>
+      body {
+        background-color: #1a1a1a;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .main-content {
+        display: flex;
+        width: 100%;
+        max-width: 1300px;
+        margin: auto;
+        gap: 20px;
+      }
+
+      .screen-container {
+        width: 77%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .screen {
+        width: 100%;
+        height: 10px;
+        background: linear-gradient(to bottom, #fff, #666);
+        margin-bottom: 15px;
+        transform: perspective(200px) rotateX(-10deg);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      }
+
+      .screen-text {
+        color: #666;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .seating-layout {
+        flex: 4;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        border-right: 1px solid gray;
+      }
+
+      .tier {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+      }
+
+      .tier-name {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 8px 20px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+        justify-content: center;
+      }
+
+      .row-label {
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .seats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .seat {
+        width: 25px;
+        height: 25px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 11px;
+        transition: all 0.2s ease;
+        color: #333;
+      }
+
+      .premium-seat {
+        background-color: #ffd700;
+      }
+
+      .gold-seat {
+        background-color: silver;
+      }
+
+      .basic-seat {
+        background-color: brown;
+      }
+
+      .seat:hover {
+        transform: scale(1.1);
+      }
+
+      .seat.selected {
+        opacity: 0.5;
+      }
+
+      .legend {
+        display: flex;
+        gap: 20px;
+        margin-top: 40px;
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        justify-content: center;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+
+      .legend-box {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+      }
+
+      .price-tag {
+        font-size: 12px;
+        color: #999;
+      }
+
+      .sticky-summary {
+        flex: 1;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 15px;
+        border-radius: 12px;
+        height: fit-content;
+        align-self: flex-start;
+        position: sticky;
+        top: 20px;
+      }
+
+      .summary-header {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 10px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .summary-content {
+        font-size: 14px;
+      }
+
+      .summary-content div {
+        margin-bottom: 12px;
+      }
+      #goldSummary {
+        background-color: rgba(255, 217, 0, 0.377);
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+      }
+      #silverSummary {
+        background-color: rgba(192, 192, 192, 0.458);
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+      }
+      #bronzeSummary {
+        background-color: rgba(165, 42, 42, 0.403);
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+      }
+      .book-btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 8px 16px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 10px;
+        width: 100%;
+      }
+
+      .book-btn:hover {
+        background-color: #43a047;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          flex-direction: column;
+        }
+
+        .seating-layout,
+        .sticky-summary {
+          width: 100%;
+        }
+
+        .sticky-summary {
+          position: relative;
+          top: unset;
+        }
+      }
+      .back-button {
+        position: sticky;
+        top: 10px;
+        left: 5px;
+        width: 100%;
+        margin: auto;
+        overflow: hidden;
+        display: inline-block;
+        padding: 4px 8px;
+        background-color: gray;
+        color: #333;
+        border: none;
+        border-radius: 5px;
+        z-index: 5;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: Arial, sans-serif;
+        text-decoration: none;
+        margin-bottom: 20px;
+      }
+
+      .back-button:hover {
+        background-color: gold;
+        color: white;
+      }
+      .button-text {
+        display: none;
+      }
+      .back-button:hover .button-text {
+        width: 60px;
+        opacity: 1;
+        display: inline;
+      }
+
+      .button-icon {
+        width: 25px;
+        height: 25px;
+      }
+
+      .button-text {
+        width: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: all 0.3s ease;
+        margin-left: 8px;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    {% csrf_token %}
+    <button
+      class="back-button"
+      onclick="window.history.back()"
+      aria-label="Go back"
+    >
+      <i class="fa-solid fa-backward"></i>
+      <span class="button-text">Go Back</span>
+    </button>
+    <div class="screen-container">
+      <div class="screen"></div>
+      <div class="screen-text">All eyes this way please!</div>
+    </div>
+    <div class="main-content">
+      <div class="seating-layout">
+        <div class="tier">
+          <div class="row">
+            <div class="row-label">A</div>
+            <div class="seats">
+              {% for i in gold_range %}
+              <div
+                class="seat premium-seat"
+                data-row="A"
+                data-seat="{{ i|add:1 }}"
+                data-price="{{theatre.gold_price}}"
+                data-tier="Gold"
+              ></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="tier">
+          <div class="row">
+            <div class="row-label">B</div>
+            <div class="seats">
+              {% for i in silver_range %}
+              <div
+                class="seat gold-seat"
+                data-row="B"
+                data-seat="{{i|add:1}}"
+                data-price="{{theatre.silver_price}}"
+                data-tier="Silver"
+              ></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="tier">
+          <div class="row">
+            <div class="row-label">C</div>
+            <div class="seats">
+              {% for i in bronze_range %}
+              <div
+                class="seat basic-seat"
+                data-row="C"
+                data-seat="{{i|add:1}}"
+                data-price="{{theatre.bronze_price}}"
+                data-tier="Bronze"
+              ></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-box premium-seat"></div>
+            <span
+              >Gold <span class="price-tag">₹{{theatre.gold_price}}</span></span
+            >
+          </div>
+          <div class="legend-item">
+            <div class="legend-box gold-seat"></div>
+            <span
+              >Silver
+              <span class="price-tag">₹{{theatre.silver_price}}</span></span
+            >
+          </div>
+          <div class="legend-item">
+            <div class="legend-box basic-seat"></div>
+            <span
+              >Bronze
+              <span class="price-tag">₹{{theatre.bronze_price}}</span></span
+            >
+          </div>
+          <div class="legend-item">
+            <div
+              class="legend-box"
+              style="background-color: #ccc; opacity: 0.5"
+            ></div>
+            <span>Selected</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky-summary" id="summaryPanel">
+        <div class="summary-header" onclick="toggleSummary()">
+          ☰ Booking Summary
+        </div>
+        <div class="summary-content" id="summaryContent">
+          <div id="goldSummary">Gold: 0 seat(s)</div>
+          <div id="silverSummary">Silver: 0 seat(s)</div>
+          <div id="bronzeSummary">Bronze: 0 seat(s)</div>
+          <div class="total-price">
+            Total: ₹<span id="total-amount">0</span>
+          </div>
+        <a href="{% url 'booking_home' %}">
+            <button class="book-btn" onclick="confirmBooking()">Book Now</button>
+        </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let goldCount = 0;
+      let silverCount = 0;
+      let bronzeCount = 0;
+      let total = 0;
+
+      const goldPrice = parseInt("{{theatre.gold_price}}");
+      const silverPrice = parseInt("{{theatre.silver_price}}");
+      const bronzePrice = parseInt("{{theatre.bronze_price}}");
+
+      const totalDisplay = document.getElementById("total-amount");
+      const goldSummary = document.getElementById("goldSummary");
+      const silverSummary = document.getElementById("silverSummary");
+      const bronzeSummary = document.getElementById("bronzeSummary");
+
+      function updateSummary() {
+        goldSummary.textContent = `Gold: ${goldCount} seat(s)`;
+        silverSummary.textContent = `Silver: ${silverCount} seat(s)`;
+        bronzeSummary.textContent = `Bronze: ${bronzeCount} seat(s)`;
+        total =
+          goldCount * goldPrice +
+          silverCount * silverPrice +
+          bronzeCount * bronzePrice;
+        totalDisplay.textContent = total;
+      }
+
+      document.querySelectorAll(".seat").forEach((seat) => {
+        seat.addEventListener("click", function () {
+          const row = this.getAttribute("data-row");
+          this.classList.toggle("selected");
+
+          const increment = this.classList.contains("selected") ? 1 : -1;
+
+          if (row === "A") goldCount += increment;
+          else if (row === "B") silverCount += increment;
+          else if (row === "C") bronzeCount += increment;
+
+          updateSummary();
+        });
+      });
+
+      function toggleSummary() {
+        const content = document.getElementById("summaryContent");
+        content.style.display =
+          content.style.display === "none" ? "block" : "none";
+      }
+
+      document.getElementById("summaryContent").style.display = "block";
+
+      function confirmBooking() {
+        alert(`Thanks for booking your ticket!`);
+      }
+    </script>
+  </body>
+</html>

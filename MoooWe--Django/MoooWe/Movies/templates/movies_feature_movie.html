@@ -1,0 +1,533 @@
+{% extends 'movies_base.html' %} 
+{% load static %} 
+{% block content %}
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  #main-section {
+    color: white;
+    display: block;
+    width: 100%;
+    margin: auto;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to right, #000000, #222, #000);
+    padding-top: 15px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .movie-card {
+    width: 90%;
+    margin: auto;
+    background: linear-gradient(to right, #000000, #222, #000);
+    color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(255, 255, 255, 0.1);
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    height: 500px;
+    z-index: 10;
+    font-family: archivo-black, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin-top: 20px;
+  }
+
+  .movie-card:hover {
+    transform: scale(1.02);
+  }
+
+  .poster {
+    width: 30%;
+    overflow: hidden;
+  }
+
+  .poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+  }
+
+  .details {
+    width: 50%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .title {
+    font-size: 32px;
+    font-weight: 600;
+  }
+
+  .genre-container {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .genre-tag {
+    background: gray;
+    color: white;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .story {
+    font-size: 16px;
+    margin: 15px 0;
+    line-height: 1.6;
+  }
+
+  .rating {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f1c40f;
+  }
+
+  .year {
+    font-size: 16px;
+    color: #bbb;
+  }
+
+  .cast {
+    font-size: 16px;
+    margin: 15px 0;
+    color: #ccc;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .rate-btn {
+    background: gold;
+    color: white;
+  }
+
+  .rate-btn:hover {
+    background: greenyellow;
+    color: #000;
+  }
+
+  .watchlist-btn {
+    background: gold;
+    color: white;
+  }
+
+  .watchlist-btn:hover {
+    background: greenyellow;
+    color: #000;
+  }
+
+  .additional-header {
+    font-size: 25px;
+    font-weight: 600;
+    color: #f1f1f1;
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f39c12;
+    font-family: archivo-black, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .additional-image {
+    width: 60%;
+    margin: auto;
+    background: #222;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .additional-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .comment-section {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+  }
+
+  .comment-card {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    border: 1px solid #333333;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding: 15px;
+    transition: all 0.2s ease;
+  
+  }
+
+  .comment-card:hover {
+    border-color: #444;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+  }
+
+  .username {
+    font-weight: 600;
+    margin-right: 10px;
+  }
+
+  .timestamp {
+    color: #a0a0a0;
+    font-size: 0.8rem;
+  }
+
+  .comment-content {
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+
+  .comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .action-btn {
+    background: transparent;
+    border: none;
+    color: #a0a0a0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 5px;
+  }
+
+  .action-btn:hover {
+    color: #e0e0e0;
+  }
+
+  .action-btn.liked {
+    color: #4caf50;
+  }
+
+  .action-btn.disliked {
+    color: #f44336;
+  }
+
+
+  .comment-input {
+  background-color: #1e1e1e;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.comment-input .d-flex.mb-3 {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.comment-input .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-input .username {
+  font-weight: 600;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.comment-input textarea {
+  width: 100%;
+  background-color: #2a2a2a;
+  border: 1px solid #333333;
+  color: #e0e0e0;
+  border-radius: 4px;
+  resize: none;
+  padding: 10px;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.comment-input textarea:focus {
+  border-color: #ff4500;
+  box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25);
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+  .btn-post {
+    background-color: #ff4500;
+    border: none;
+    color: white;
+    transition: background-color 0.2s ease;
+    padding: 5px 15px;
+    margin: 5px;
+    margin-top: 10px;
+  }
+
+  .btn-post:hover {
+    background-color: #ff6a33;
+  }
+
+
+  .section-title {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #e0e0e0;
+    border-bottom: 1px solid #333333;
+    padding-bottom: 10px;
+  }
+
+  .sort-options {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sort-btn {
+    background-color: #2a2a2a;
+    border: 1px solid #333333;
+    color: #a0a0a0;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sort-btn:hover,
+  .sort-btn.active {
+    background-color: #ff4500;
+    color: white;
+    border-color: #ff4500;
+  }
+
+  @media (max-width: 1024px) {
+    .movie-card {
+      flex-direction: column;
+      height: auto;
+    }
+
+    .poster {
+      width: 100%;
+      height: 450px;
+    }
+
+    .poster img {
+      border-radius: 0;
+    }
+
+    .details {
+      width: 100%;
+      padding: 20px;
+    }
+  }
+
+  .back-button {
+    position: sticky;
+    top: 10px;
+    left: 5px;
+    width: 90%;
+    margin: auto;
+    overflow: hidden;
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: gray;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+  }
+
+  .back-button:hover {
+    background-color: gold;
+    color: white;
+  }
+
+  .button-text {
+    display: none;
+  }
+
+  .back-button:hover .button-text {
+    width: 60px;
+    opacity: 1;
+    display: inline;
+  }
+
+  .button-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .button-text {
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+  .submit-comment{
+    border: none;
+    background-color: none;
+    padding: none;
+  }
+</style>
+
+<main>
+  <div id="main-section">
+    <div class="container">
+      <button class="back-button" onclick="window.history.back()" aria-label="Go back">
+        <i class="fa-solid fa-backward"></i>
+        <span class="button-text">Go Back</span>
+      </button>
+
+      <div class="movie-card">
+        <div class="poster">
+          <img src="{% static 'posters/' %}{{movie.poster}}" alt="Movie Poster" />
+        </div>
+        <div class="details">
+          <div>
+            <h2 class="title">{{movie.name}}</h2>
+            <p class="year">Release Year: {{movie.release_year}}</p>
+            <div class="genre-container">
+              <span class="genre-tag">{{movie.genre}}</span>
+            </div>
+            <p class="cast"><strong>Cast :</strong> {{movie.cast}}</p>
+            <p class="story">{{movie.description}}</p>
+            <p class="rating">⭐ IMDb: {{movie.imdb_rating}}/10</p>
+          </div>
+          <div class="actions">
+            <button class="btn rate-btn">Rate</button>
+            <a href="{% url 'add_to_watchlist' id=movie.sno %}">
+              <button class="btn watchlist-btn">Add to Watchlist +</button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="additional-header">Additional Images</h3>
+      <div class="additional-image">
+        <img src="{% static 'posters/' %}{{movie.landscape}}" alt="Additional Scene" />
+      </div>
+
+      <div class="comment-section">
+        <div class="comment-input">
+          <div class="d-flex mb-3">
+            <img src="https://i.pravatar.cc/150?img=1" alt="Your Avatar" class="avatar" />
+            <div class="ms-2">
+              <div class="username">{{request.user.email}}</div>
+            </div>
+          </div>
+          <form method="post" action="{% url 'add_comment' movie_id=movie.sno %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <textarea class="form-control" rows="3" name="comment" placeholder="Add a comment..."></textarea>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <button class="btn btn-post" type="submit">POST</button>
+            </div>
+          </form>
+          
+
+        <div class="comments-list">
+          {% for comment in comments %}
+          <div class="comment-card">
+            <div class="comment-header">
+              <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" class="avatar" />
+              <div class="username">{{comment.user}}</div>
+              <div class="timestamp">{{comment.time_commented}}</div>
+              <div class="rating ms-auto">
+              </div>
+            </div>
+            <div class="comment-content">
+              {{comment.comment}}
+            </div>
+            <div class="comment-actions">
+              <button class="action-btn liked">
+                <i class="fa-solid fa-thumbs-up"></i>
+                <span>{{comment.likes}}</span>
+              </button>
+              <button class="action-btn">
+                <i class="fa-solid fa-thumbs-down"></i>
+                <span>{{comment.dislikes}}</span>
+              </button>
+            
+              {% if comment.user == request.user %}
+                <form method="post" action="{% url 'delete_comment' comment_id=comment.id %}" style="display: inline;">
+                  {% csrf_token %}
+                  <button class="action-btn" onclick="return confirm('Are you sure you want to delete this comment?');">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Delete</span>
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+            
+          </div>
+          {%endfor%}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

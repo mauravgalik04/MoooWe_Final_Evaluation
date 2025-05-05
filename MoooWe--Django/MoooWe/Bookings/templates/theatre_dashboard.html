@@ -1,0 +1,341 @@
+{% extends 'movies_base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    background: #000;
+    font-family: 'Archivo Black', sans-serif;
+    color: #eee;
+    overflow-x: hidden;
+  }
+  a {
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .parallax-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("{% static 'images/cinematic_bg.jpg' %}") no-repeat center center/cover;
+    z-index: -2;
+    animation: zoomBG 20s ease-in-out infinite alternate;
+  }
+  @keyframes zoomBG {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: -1;
+  }
+
+  .wrapper-con {
+    width: 100%;
+    min-height: 100vh;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .content-con {
+    background: rgba(20, 20, 20, 0.95);
+    padding: 30px;
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+    width: 90%;
+    max-width: 1200px;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 1s ease forwards;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .heading {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .heading h4 {
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    color: #BB86FC;
+    opacity: 0;
+    animation: fadeInHeader 1s forwards 0.5s;
+  }
+  @keyframes fadeInHeader {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .my-theatres {
+    padding: 20px 0;
+  }
+  .my-theatre-heading {
+    text-align: center;
+    font-size: 2rem;
+    color: #BB86FC;
+    margin-bottom: 30px;
+    letter-spacing: 1.5px;
+    position: relative;
+  }
+  .my-theatre-heading::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 3px;
+    background-color: #BB86FC;
+  }
+
+  .theatre-card {
+    display: flex;
+    flex-wrap: wrap;
+    background: #111;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    transform: translateY(40px);
+    opacity: 0;
+    animation: cardAppear 0.8s forwards;
+    min-height: 180px;
+  }
+  @keyframes cardAppear {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .theatre-image {
+    flex: 1 1 35%;
+    overflow: hidden;
+    position: relative;
+  }
+  .theatre-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .theatre-image:hover img {
+    transform: scale(1.1);
+  }
+  .theatre-info {
+    flex: 1 1 65%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .theatre-info h2 {
+    font-size: 1.4rem;
+    color: #BB86FC;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .theatre-info p {
+    margin-bottom: 6px;
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+  .theatre-info h3, .theatre-info h4 {
+    margin: 10px 0 6px;
+    padding-top: 6px;
+    border-top: 1px solid #333;
+    font-size: 1rem;
+  }
+
+  .theatre-operations, .show-operations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .theatre-btn, .show-btn {
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #222;
+    color: #BB86FC;
+    border: 2px solid #BB86FC;
+    font-size: 0.9rem;
+  }
+  .theatre-btn.update {
+    background-color: #fed24e;
+    color: #000;
+    border: none;
+  }
+  .theatre-btn.delete {
+    background-color: #d83c4c;
+    border: none;
+  }
+  .theatre-btn:hover, .show-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  }
+
+  .add-theatre-sec {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .add-theatre-sec a {
+    background-color: #222;
+    color: #BB86FC;
+    border: 2px solid #BB86FC;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+  }
+  .add-theatre-sec a:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  }
+
+  @media (max-width: 768px) {
+    .theatre-card {
+      flex-direction: column;
+    }
+    .theatre-image, .theatre-info {
+      flex: 1 1 100%;
+    }
+    .theatre-info {
+      padding: 10px;
+    }
+  }
+
+  .background-image-con {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    overflow: hidden;
+  }
+  .background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(4px) brightness(0.7);
+  }
+  .back-button {
+    position: sticky;
+    top: 10px;
+    left: 5px;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: gray;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+  }
+
+  .back-button:hover {
+    background-color: gold;
+    color: white;
+  }
+  .button-text {
+    display: none;
+  }
+  .back-button:hover .button-text {
+    width: 60px;
+    opacity: 1;
+    display: inline;
+  }
+
+  .button-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .button-text {
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+</style>
+
+<div class="parallax-bg"></div>
+<div class="overlay"></div>
+
+<main>
+  <button
+  class="back-button"
+  onclick="window.history.back()"
+  aria-label="Go back"
+>
+  <i class="fa-solid fa-backward"></i>
+  <span class="button-text">Go Back</span>
+</button>
+  <div class="background-image-con">
+    <img src="{% static 'images/theatre.jpeg' %}" alt="theatre-background-image" class="background-image">
+  </div>
+  <div class="wrapper-con">
+    <div class="content-con">
+      <div class="heading">
+        <h4>Welcome, {{ user.name }}</h4>
+      </div>
+      <div class="my-theatres">
+        <h2 class="my-theatre-heading">My Theatres</h2>
+        {% for t in theatres %}
+        <div class="theatre-card" style="animation-delay: {{ forloop.counter0|add:"0.2" }}s;">
+          <div class="theatre-image">
+            <img src="{% static 'uploads/pvr.jpg' %}" alt="{{ t.name }} Theatre">
+          </div>
+          <div class="theatre-info">
+            <div>
+              <h2>{{ t.name }}</h2>
+              <p><strong>Address:</strong> {{ t.location }}</p>
+              <p><strong>Capacity:</strong> {{ t.capacity }}</p>
+            </div>
+            <div>
+              <h4>Manage Theatre</h4>
+              <div class="theatre-operations">
+                <a href="{% url 'update_theatre' id=t.id %}" class="theatre-btn update">Update Theatre</a>
+                <a href="{% url 'delete_theatre' id=t.id %}" onclick="return confirm('Are you sure you want to delete this comment?');" class="theatre-btn delete">Delete Theatre</a>
+              </div>
+              <h3>Manage Your Shows</h3>
+              <div class="show-operations">
+                <a href="{% url 'add_show' id=t.id %}" class="show-btn">Add Show</a>
+                <a href="{% url 'manage_shows' id=t.id %}" class="theatre-btn update">Manage Your Show</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <div class="add-theatre-sec">
+          <a href="{% url 'theatre_registration' %}">Add a Theatre</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

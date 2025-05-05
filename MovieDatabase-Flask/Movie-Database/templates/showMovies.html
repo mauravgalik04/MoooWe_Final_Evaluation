@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Movies</title>
+    <link rel="stylesheet" href="https://use.typekit.net/med7fre.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="stylesheet" href="{{url_for('static' , filename = 'css/showMovies.css')}}">
+</head>
+<body>
+    {%extends 'base.html'%} {%block content%}
+    <div id="content-con">
+      <div id="movie-container">
+        {%for movie in movies%}
+        <div class="movie-card">
+          <div class="movie-poster">
+            <div class="title-overlay">{{movie.name}}</div>
+            <img
+              class="initial-image"
+              src="{{url_for('static', filename='uploads/'+movie.landscape)}}"
+              alt="Backdrop"
+            />
+            <img
+              class="hover-poster"
+              src="{{url_for('static', filename='uploads/'+movie.poster)}}"
+              alt="Poster"
+            />
+          </div>
+          <div class="movie-content">
+            <h2 class="movie-title">{{movie.name}}</h2>
+            <div class="movie-rating">{{movie.imdb_rating}}</div>
+            <span class="movie-genre">{{movie.genre.capitalize()}}</span>
+            <p class="movie-story">{{movie.description}}</p>
+            <div class="button-group">
+              {% if current_user.role == 'admin' %}
+              <a
+                href="{{url_for('update_movie', sno=movie.sno)}}"
+                class="update-btn"
+              >Update
+                <i class="fas fa-edit"></i>
+              </a>
+              <a
+                href="{{url_for('delete_movie', sno=movie.sno)}}"
+                class="delete-btn"
+              >Delete
+                <i class="fas fa-trash"></i>
+              </a>
+              {% endif %}
+              <a
+                href="{{url_for('featured_movie', sno=movie.sno)}}"
+                class="see-more-btn"
+              >See more
+                <i class="fas fa-eye"></i>
+              </a>
+              <a
+                href="{{url_for('add_to_watchlist', sno=movie.sno)}}"
+                class="watchlist-btn"
+              >Watchlist
+                <i class="fas fa-plus"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {%endfor%}
+      </div>
+      <div id="watchlist-con">
+        <div id="watchlist-header">My Watchlist</div>
+        <div id="watchlist-items">
+          {%for movie in movies%} {%if movie.watchlist == 'yes'%}
+          <div class="watchlist-card">
+            <a
+              href="{{url_for('remove_from_watchlist', sno=movie.sno)}}"
+              class="remove-btn"
+            >
+              <i class="fas fa-times"></i>
+            </a>
+            <img
+              class="watchlist-poster"
+              src="{{url_for('static', filename='uploads/'+movie.poster)}}"
+              alt="Sample Movie 1"
+            />
+            <div class="watchlist-info">
+              <div class="watchlist-title">{{movie.name}}</div>
+              <div class="watchlist-genre">{{movie.genre}}</div>
+              <a
+                href="{{url_for('featured_movie',sno=movie.sno)}}"
+                class="see-more"
+                >See more →</a
+              >
+            </div>
+          </div>
+          {%endif%} {%endfor%}
+        </div>
+      </div>
+    </div>
+    {%endblock%}
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/60c3389c89.js" crossorigin="anonymous"></script>    
+</html>

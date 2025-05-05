@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
+}
+
+body {
+background: #181818;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+padding: 20px;
+}
+
+.container {
+display: flex;
+flex-direction: column;
+gap: 20px;
+width: 100%;
+}
+
+.movie-card {
+width: 100%;
+background: #222;
+color: #fff;
+border-radius: 12px;
+overflow: hidden;
+box-shadow: 0 12px 35px rgba(255, 255, 255, 0.1);
+display: flex;
+transition: transform 0.3s ease-in-out;
+height: 500px; 
+z-index: 10;
+}
+
+.movie-card:hover {
+transform: scale(1.02);
+}
+
+.poster {
+width: 30%;
+overflow: hidden;
+}
+
+.poster img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+border-top-left-radius: 12px;
+border-bottom-left-radius: 12px;
+}
+
+.details {
+width: 50%;
+padding: 30px;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
+
+.title {
+font-size: 32px;
+font-weight: 600;
+}
+
+.genre-container {
+display: flex;
+gap: 8px;
+margin: 12px 0;
+flex-wrap: wrap;
+}
+
+.genre-tag {
+background: #f39c12;
+color: white;
+font-size: 14px;
+padding: 8px 12px;
+border-radius: 5px;
+font-weight: bold;
+text-transform: uppercase;
+}
+
+.story {
+font-size: 16px;
+margin: 15px 0;
+line-height: 1.6;
+}
+
+.rating {
+font-size: 20px;
+font-weight: 600;
+color: #f1c40f;
+}
+
+.year {
+font-size: 16px;
+color: #bbb;
+}
+
+.cast {
+font-size: 16px;
+margin: 15px 0;
+color: #ccc;
+}
+
+.actions {
+display: flex;
+gap: 12px;
+margin-top: 20px;
+}
+
+.btn {
+padding: 14px 20px;
+border: none;
+cursor: pointer;
+font-size: 16px;
+border-radius: 6px;
+font-weight: bold;
+transition: 0.3s;
+}
+
+.rate-btn {
+background: #e74c3c;
+color: white;
+}
+
+.rate-btn:hover {
+background: #c0392b;
+}
+
+.watchlist-btn {
+background: #27ae60;
+color: white;
+}
+
+.watchlist-btn:hover {
+background: #229954;
+}
+
+
+.additional-header {
+font-size: 18px;
+font-weight: 600;
+color: #f1f1f1;
+text-align: center;
+margin-top: 20px;
+padding-bottom: 10px;
+border-bottom: 2px solid #f39c12;
+}
+
+
+.additional-image {
+width: 100%;
+background: #222;
+border-radius: 12px;
+box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+overflow: hidden;
+}
+
+.additional-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+border-radius: 12px;
+}
+
+@media (max-width: 1024px) {
+.movie-card {
+flex-direction: column;
+height: auto;
+}
+
+.poster {
+width: 100%;
+height: 450px;
+}
+
+.poster img {
+border-radius: 0;
+}
+
+.details {
+width: 100%;
+padding: 20px;
+}
+}
+
+.back-button {
+    position: sticky;
+    top: 10px;
+    left: 5px;
+    overflow: hidden;
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: gold;
+    color: white;
+}
+.button-text{
+    display: none;
+}
+.back-button:hover .button-text {
+    width: 60px;
+    opacity: 1;
+    display: inline;
+}
+
+.button-icon {
+    width: 25px;
+    height: 25px;
+ 
+}
+
+.button-text {
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+    white-space: nowrap;
+}

@@ -1,0 +1,266 @@
+{% extends 'movies_base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  .manager-con {
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 80px;
+    width: 80%;
+    background-color: #1E1E1E;
+    font-family: "archivo-black", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    padding-bottom: 20px;
+  }
+
+  .intro-title {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 2px solid gray;
+  }
+
+  .shows-wrapper {
+    width: 90%;
+    margin: 25px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .show-card {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    align-items: center;
+    transition: transform 0.3s;
+    overflow: hidden;
+  }
+
+  .show-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .movie-poster {
+    flex-shrink: 0;
+    width: 130px;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
+
+  .movie-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .movie-poster img:hover {
+    transform: scale(1.05);
+  }
+
+  .movie-info {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .movie-info h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .movie-info p {
+    margin: 4px 0;
+  }
+
+  .movie-title {
+    color: #BB86FC;
+  }
+
+  .show-time {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: 1px solid #03DAC6;
+    border-radius: 8px;
+    color: gold;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(3, 218, 198, 0.1);
+    width: fit-content;
+  }
+
+  .show-time:hover {
+    background: gold;
+    color: #121212;
+    box-shadow: 0 0 15px rgba(3, 218, 198, 0.4);
+  }
+
+  .price-info {
+    color: #B0B0B0;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .price-tag {
+    color: gold;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .show-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .movie-poster {
+      width: 100%;
+      height: 250px;
+    }
+
+    .movie-info {
+      width: 100%;
+      padding-top: 10px;
+    }
+  }
+
+  .show-operations {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-left: auto;
+    padding-left: 15px;
+  }
+
+  .op-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .update-btn {
+    background-color: gold;
+    color: #121212;
+  }
+
+  .update-btn:hover {
+    background-color: #00bfa5;
+    color: white;
+  }
+
+  .delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+  }
+
+  .delete-btn:hover {
+    background-color: #e60000;
+    color: #fff;
+  }
+
+  .no-show {
+    font-size: 0.8rem;
+    text-align: center;
+    margin: 50px;
+  }
+
+  .back-button {
+    position: sticky;
+    top: 10px;
+    left: 5px;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: gray;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+  }
+
+  .back-button:hover {
+    background-color: gold;
+    color: white;
+  }
+
+  .button-text {
+    display: none;
+  }
+
+  .back-button:hover .button-text {
+    width: 60px;
+    opacity: 1;
+    display: inline;
+  }
+
+  .button-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .button-text {
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+</style>
+
+<main>
+  <div class="manager-con">
+    <button class="back-button" onclick="window.history.back()" aria-label="Go back">
+      <i class="fa-solid fa-backward"></i>
+      <span class="button-text">Go Back</span>
+    </button>
+
+    <h2 class="intro-title">Shows for Your Theatre</h2>
+
+    <div class="shows-wrapper">
+      {% if shows %}
+        {% for s in shows %}
+        <div class="show-card">
+          <div class="movie-poster">
+            <img src="{% static 'uploads/batman-poster.jpeg' %}" alt="{{s.movie_name}}">
+          </div>
+          <div class="movie-info">
+            <h4 class="movie-title">{{ s.movie_name }}</h4>
+            <p>Duration • {{ s.duration }} mins</p>
+            <p>Date: {{ s.date }}</p>
+            <div class="show-time">{{ s.time }}</div>
+          </div>
+          <div class="show-operations">
+            <a href="{% url 'update_show' id=s.id %}" class="op-btn update-btn">Update Show</a>
+            <a href="{% url 'delete_show' id=s.id %}" onclick="return confirm('Are you sure you want to delete this comment?');" class="op-btn delete-btn">Delete Show</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <h2 class="no-show">No shows at your theatre currently.</h2>
+      {% endif %}
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,380 @@
+{% extends 'movies_base.html' %}
+{% load static %}
+
+{% block title_content %}MovieHive | Edit Profile{% endblock %}
+
+{% block content %}
+<div class="edit-profile-container">
+    <div class="overlay"></div>
+    
+    <div class="edit-profile-card">
+        <div class="profile-header">
+            <div class="profile-picture">
+                {% if user_profile.profile_picture %}
+                    <img src="{{ user_profile.profile_picture }}" alt="Profile Picture">
+                {% else %}
+                    <i class="fas fa-user"></i>
+                {% endif %}
+            </div>
+            <h2>Edit Profile</h2>
+            <p class="subtitle">Update your personal information</p>
+        </div>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="edit-profile-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="profile_picture">
+                    <i class="fas fa-camera"></i>
+                    Profile Picture
+                </label>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                <small class="form-text">Choose a profile picture (optional)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="full_name">
+                    <i class="fas fa-user"></i>
+                    Full Name
+                </label>
+                <input type="text" id="full_name" name="full_name" value="{{ user_profile.full_name }}" required>
+                <small class="form-text">Enter your full name</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </label>
+                <input type="email" id="email" name="email" value="{{ user_profile.email }}" readonly>
+                <small class="form-text">Email cannot be changed</small>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">
+                    <i class="fas fa-phone"></i>
+                    Phone Number
+                </label>
+                <input type="tel" id="phone" name="phone" value="{{ user_profile.phone }}" pattern="[0-9]{10}" required>
+                <small class="form-text">Enter your 10-digit phone number</small>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">
+                    <i class="fas fa-venus-mars"></i>
+                    Gender
+                </label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male" {% if user_profile.gender == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if user_profile.gender == 'Female' %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if user_profile.gender == 'Other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+                <a href="{% url 'movies_profile' %}" class="cancel-button">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.edit-profile-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background-image: url("{% static 'images/avengers-landscape.jpeg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 0;
+}
+
+.edit-profile-card {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    width: 100%;
+    max-width: 500px;
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
+    position: relative;
+    color: #fff;
+}
+
+.edit-profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 48px;
+    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+    overflow: hidden;
+}
+
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-header h2 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #ccc;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #ddd;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #444;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.form-group input[type="file"] {
+    padding: 8px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #aaa;
+}
+
+.form-group input[readonly] {
+    background-color: rgba(255, 255, 255, 0.02);
+    cursor: not-allowed;
+}
+
+.form-text {
+    display: block;
+    margin-top: 6px;
+    color: #888;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 35px;
+}
+
+.save-button,
+.cancel-button {
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.save-button {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+}
+
+.save-button:hover {
+    background: linear-gradient(135deg, #357abd 0%, #2868a5 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+}
+
+.cancel-button {
+    background: transparent;
+    color: #ccc;
+    border: 1px solid #666;
+}
+
+.cancel-button:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.messages {
+    margin-bottom: 25px;
+}
+
+.alert {
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+.alert-success::before {
+    content: "\f00c";
+}
+
+.alert-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.alert-error::before {
+    content: "\f071";
+}
+
+@media (max-width: 600px) {
+    .edit-profile-card {
+        padding: 30px 20px;
+    }
+
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+    }
+
+    .profile-header h2 {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.edit-profile-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    transform: translateY(-1px);
+}
+
+.form-group:hover input,
+.form-group:hover select {
+    border-color: #4a90e2;
+}
+</style>
+{% endblock %} 

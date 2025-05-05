@@ -1,0 +1,495 @@
+{% extends 'movies_base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: #0a0a0a;
+        color: #fff;
+        background-image: url('{% static "images/movie-pattern.png" %}');
+        background-repeat: repeat;
+        background-attachment: fixed;
+        background-size: 300px;
+        background-blend-mode: overlay;
+        position: relative;
+    }
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+        z-index: -1;
+    }
+    .decorative-banner {
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 2rem;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .decorative-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7) contrast(1.1);
+        transform: scale(1.1);
+        transition: transform 0.5s ease;
+    }
+    .decorative-banner:hover .decorative-image {
+        transform: scale(1.15);
+    }
+    .decorative-banner::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(10, 10, 10, 0.2) 0%, rgba(10, 10, 10, 0.6) 100%);
+        pointer-events: none;
+    }
+    .cover-banner {
+        {% if user_profile.cover_image %}
+        background-image: url('{{ user_profile.cover_image.url }}');
+        {% else %}
+        background-image: url('{% static "images/default-cover.jpg" %}');
+        {% endif %}
+        background-size: cover;
+        background-position: center;
+        height: 200px;
+        position: relative;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+    }
+    
+    .edit-cover-btn, .edit-profile-pic-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: rgba(0,0,0,0.7);
+        color: #fff;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        cursor: pointer;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        z-index: 2;
+    }
+    .edit-cover-btn:hover, .edit-profile-pic-btn:hover {
+        background-color: rgba(243, 156, 18, 0.8);
+        transform: translateY(-2px);
+    }
+    .profile-container {
+        padding: 2rem 6rem;
+        max-width: 100%;
+        margin: -8rem 0 0;
+        position: relative;
+        z-index: 1;
+    }
+    .profile-header-top {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 2.5rem;
+        width: 100%;
+        margin-top: -60px;
+        position: relative;
+        z-index: 1;
+        padding-left: 3rem;
+        padding-right: 2rem;
+    }
+    .profile-pic-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .user-info {
+        flex: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-right: 0;
+        margin-left: 2rem;
+        min-width: 300px;
+    }
+    .user-info h2 {
+        margin: 0;
+        color: #f1c40f;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        white-space: nowrap;
+        overflow: visible;
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+    }
+    .quote-container {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    .quote-input {
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ccc;
+        font-style: italic;
+        font-size: 1rem;
+        padding: 0.8rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .quote-input:focus {
+        outline: none;
+        border-color: #f39c12;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    .user-details {
+        margin-top: 0;
+        font-size: 1.1rem;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding: 1.5rem;
+        border-radius: 15px;
+        width: 100%;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        top: -60px;
+    }
+    .user-details p {
+        margin: 0.8rem 0;
+        padding: 0.8rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .user-details p:hover {
+        background-color: rgba(243, 156, 18, 0.1);
+        transform: translateX(5px);
+    }
+    .user-details strong {
+        color: #f39c12;
+        min-width: 120px;
+        display: inline-block;
+        font-weight: 600;
+    }
+    .update-info-button {
+        margin-top: 1.5rem;
+        background-color: #f39c12;
+        color: #000;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        cursor: pointer;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+    }
+    .update-info-button:hover {
+        background-color: #e67e22;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+    }
+    .section-title {
+        color: #f39c12;
+        margin: 2.5rem 0 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        position: relative;
+        padding-left: 1rem;
+    }
+    .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 70%;
+        background-color: #f39c12;
+        border-radius: 2px;
+    }
+    .movie-list {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding: 1rem 0;
+        scrollbar-width: thin;
+        scrollbar-color: #f39c12 #1f1f1f;
+    }
+    .movie-list::-webkit-scrollbar {
+        height: 8px;
+    }
+    .movie-list::-webkit-scrollbar-track {
+        background: #1f1f1f;
+        border-radius: 4px;
+    }
+    .movie-list::-webkit-scrollbar-thumb {
+        background-color: #f39c12;
+        border-radius: 4px;
+    }
+    .movie-card {
+        min-width: 200px;
+        background-color: #1a1a1a;
+        border-radius: 12px;
+        overflow: hidden;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .movie-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        border-color: #f39c12;
+    }
+    .movie-card img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+    .movie-title {
+        padding: 1rem;
+        color: #ecf0f1;
+        font-weight: 500;
+    }
+    .review-card {
+        background-color: #1a1a1a;
+        margin-bottom: 1rem;
+        padding: 1.2rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    .review-card:hover {
+        transform: translateX(5px);
+        border-color: #f39c12;
+    }
+    .rating {
+        color: #f39c12;
+        font-size: 1.1rem;
+    }
+    .stats-section {
+        margin-top: 2rem;
+        width: 100%;
+        max-width: 1000px;
+        height: 400px;
+        background-color: #1a1a1a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .modal-content {
+        background-color: #1a1a1a;
+        color: #fff;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .modal-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+    }
+    .modal-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+    }
+    .form-control, .form-select {
+        background-color: #2c2c2c;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        padding: 0.8rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus, .form-select:focus {
+        background-color: #2c2c2c;
+        border-color: #f39c12;
+        color: #fff;
+        box-shadow: 0 0 0 0.25rem rgba(243, 156, 18, 0.25);
+    }
+    .form-label {
+        color: #f39c12;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .btn-warning {
+        background-color: #f39c12;
+        border-color: #f39c12;
+        color: #000;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-warning:hover {
+        background-color: #e67e22;
+        border-color: #e67e22;
+        transform: translateY(-2px);
+    }
+    .btn-secondary {
+        background-color: #2c2c2c;
+        border-color: #2c2c2c;
+        color: #fff;
+        font-weight: 500;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+        background-color: #3c3c3c;
+        border-color: #3c3c3c;
+        transform: translateY(-2px);
+    }
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #0a0a0a;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+    .profile-pic:hover {
+        transform: scale(1.05);
+    }
+</style>
+<div class="decorative-banner">
+    <img src="{% static 'images/profile-cover.jpg' %}" alt="Cinema Banner" class="decorative-image">
+</div>
+
+<div class="cover-banner">
+    <form action="{% url 'update_cover' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="cover_image" id="coverInput" hidden onchange="this.form.submit();">
+    </form>
+</div>
+
+<div class="profile-container">
+    <div class="profile-header-top">
+        <form action="{% url 'update_profile_pic' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="profile_picture" id="picInput" hidden onchange="this.form.submit();">
+            {% if user_profile.profile_picture %}
+            <img src="{% static 'images/animal-landscape.jpg' %}" class="profile-pic" alt="Profile Picture" onclick="document.getElementById('picInput').click();">
+            {% else %}
+            <img src="{% static 'images/default-avatar.png' %}" class="profile-pic" alt="Profile Picture" onclick="document.getElementById('picInput').click();">
+            {% endif %}
+        </form>
+        <div class="user-info">
+            <h2>{{ user_profile.full_name|default:"John Doe" }}</h2>
+            <div class="quote-container">
+                <input class="quote-input" id="quoteField" value="{{ user_profile.quote }}" onblur="updateQuote()">
+            </div>
+        </div>
+        <div class="user-details">
+            <p><strong>Full Name:</strong> {{ user_profile.full_name|default:"John Doe" }}</p>
+            <p><strong>Age:</strong> 19</p>
+            <p><strong>Gender:</strong> {{ user_profile.gender|default:"Not specified" }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone:</strong> {{ user_profile.phone|default:"Not specified" }}</p>
+        </div>
+    </div>
+    <a href="{% url 'movies_edit_profile' %}">Edit Profile</a>
+
+    <h3 class="section-title">Recent Reviews</h3>
+    {% if comments %}
+    {% for comment in comments %}
+    <div class="review-card">
+        <p><strong>{{comment.movie_id}}</strong>: {{comment.comment}}</p>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h4>No comments from you here ....</h4>
+    {% endif %}
+</div>
+
+
+
+
+<script>
+    function updateQuote() {
+        const quote = document.getElementById('quoteField').value;
+        $.ajax({
+            url: "{% url 'update_quote' %}",
+            method: "POST",
+            data: {
+                'quote': quote,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            }
+        });
+    }
+</script>
+
+<script>
+    const ctx = document.getElementById('genreChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Romance'],
+            datasets: [{
+                label: 'Watched Genres',
+                data: [65, 25, 40, 20, 15],
+                backgroundColor: ['#ff5733', '#33c4ff', '#f39c12', '#82e0aa', '#f8a4d9'],
+                borderRadius: 10,
+                barPercentage: 0.75,
+                categoryPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            layout: {
+                padding: {
+                    left: 30,
+                    right: 30,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ": " + context.raw + "%";
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10,
+                        color: "#bbb"
+                    },
+                    grid: {
+                        color: "#333"
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: "#eee"
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            maintainAspectRatio: false
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 100vh;
+}
+
+.timeline-container {
+    height: 100vh;
+    position: relative;
+    min-width: 100%;
+}
+
+.main-line {
+    position: absolute;
+    height: 4px;
+    background: #d4d4d4;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: drawLine 10s forwards;
+    transform-origin: left;
+}
+
+@keyframes drawLine {
+    from { transform: translateY(-50%) scaleX(0); }
+    to { transform: translateY(-50%) scaleX(1); }
+}
+
+.welcome-text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6.5em;
+    font-weight: 900;
+    color: #ffffff;
+    opacity: 0;
+    animation: welcomeFade 2.5s forwards;
+    font-family: Arial, sans-serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    z-index: 100;
+    letter-spacing: 2px;
+}
+
+@keyframes welcomeFade {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.timeline-item {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+}
+
+
+.branch {
+    position: absolute;
+    width: 2px;
+    background: #ffffff;
+    animation: growBranch 2s 2s forwards;
+    opacity: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Alternate branch directions */
+.timeline-item.odd .branch {
+    height: 120px;
+    top: 50%;
+    transform-origin: bottom;
+}
+
+.timeline-item.even .branch {
+    height: 120px;
+    bottom: 50%;
+    transform-origin: top;
+}
+
+/* Node positioning */
+
+.timeline-item.odd .node {
+    bottom: -120px;
+}
+
+.timeline-item.even .node {
+    top: -120px;
+}
+
+/* Label positioning */
+.node-label {
+    position: absolute;
+    width: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.9em;
+}
+
+.timeline-item.odd .node-label {
+    bottom: -160px;
+}
+
+.timeline-item.even .node-label {
+    top: -160px;
+}
+
+/* Movie card positioning */
+.movie-card {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 180px;
+    height: 260px;
+    perspective: 1000px;
+    opacity: 0;
+    transition: all 0.3s 0.2s;
+    z-index: 10;
+}
+
+.timeline-item.odd .movie-card {
+    bottom: -300px;
+}
+
+.timeline-item.even .movie-card {
+    top: -300px;
+}
+.branch {
+    position: absolute;
+    width: 2px;
+    background: #ffffff;
+    animation: growBranch 1s 2s forwards;
+    opacity: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 120px;
+    bottom: 50%;
+    transform-origin: bottom;
+}
+
+@keyframes growBranch {
+    from { transform: translateX(-50%) scaleY(0); }
+    to { opacity: 1; transform: translateX(-50%) scaleY(1); }
+}
+
+.node {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #000000;
+    border: 3px solid #fffefe;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0;
+    animation: nodeAppear 0.5s 3s forwards;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -120px;
+}
+
+@keyframes nodeAppear {
+    from { opacity: 0; transform: translateX(-50%) scale(0); }
+    to { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+.node:hover {
+    transform: translateX(-50%) scale(1.2);
+}
+
+.node-label {
+    position: absolute;
+    color: white;
+    width: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.9em;
+    bottom: -150px;
+}
+
+.movie-card {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 180px;
+    height: 260px;
+    perspective: 1000px;
+    opacity: 0;
+    transition: all 0.3s 0.2s;
+    z-index: 10;
+    bottom: -300px;
+}
+
+.timeline-item:hover .movie-card {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.movie-card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card-front {
+    background: #fff;
+    z-index: 2;
+}
+
+.card-back {
+    background: transparent;
+    transform: rotateY(180deg);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.9em;
+    position: relative;
+    overflow: hidden;
+}
+.card-back img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(1px) brightness(0.6);
+    z-index: 1;
+}
+.card-back .movie-title {
+    position: relative;
+    z-index: 2;
+    color: white;
+    font-size: 1.4em;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    padding: 0 15px;
+}
+.card-back .movie-year {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    font-size: 1.1em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.movie-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.back-button {
+    position: fixed;
+    top: 10px;
+    left: 75px;
+    width: 90%;
+    margin: auto;
+    overflow: hidden;
+    display: block;
+    padding: 4px 8px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: gold;
+    color: white;
+    height: 30px;
+}
+.button-text{
+    display: none;
+}
+.back-button:hover .button-text {
+    width: 60px;
+    opacity: 1;
+    display: inline;
+}
+.bg-image-collection{
+    position:fixed;
+    top: 0;
+    left: 0;
+    height: 120vh;
+    width: 120wh;
+    z-index: -10;
+    filter: blur(1px) brightness(0.6);
+}
+.collectionName{
+    color: red;
+}
+</style>
+</head>
+<body>
+    <img src="{{url_for('static' ,filename = 'uploads/avengers-landscape.jpeg')}}" alt="" class="bg-image-collection">
+    <button class="back-button" onclick="window.history.back()" aria-label="Go back">
+        <i class="fa-solid fa-backward"></i>
+        <span class="button-text">Go Back</span>
+    </button>
+    <div class="welcome-text">WELCOME TO <span class="collectionName">MARVEL</span>TIMELINE</div>
+    <div class="timeline-container" style="width: {{ movies|length * 250 }}px">
+        <div class="main-line"></div>
+        {% set count = 0 %}
+        {% for movie in movies %}
+        {%if movie.collection == "Marvel"%}
+        <div class="timeline-item {% if count % 2 == 0 %}even{% else %}odd{% endif %}" 
+        style="left: {{ loop.index0 * 250 + 125 }}px">
+        <div class="branch"></div>
+        <div class="node">
+            <div class="node-label">
+                    <div class="movie-title">{{ movie.description }}</div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="{{ url_for('static', filename='uploads/' + movie.poster) }}" 
+                        class="movie-image" 
+                        alt="{{ movie.name }}">
+                    </div>
+                    <div class="card-back">
+                        <img src="{{ url_for('static', filename='uploads/' + movie.poster) }}" 
+                        class="movie-image" 
+                        alt="{{ movie.name }}">
+                        <h2 class="movie-title">{{ movie.name }}</h2>
+                        <p class="movie-year">{{ movie.release_year }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% set count = count + 1 %}
+        {%else%}
+        
+        {%endif%}
+        {% endfor %}
+    </div>
+    </body>
+<script src="https://kit.fontawesome.com/60c3389c89.js" crossorigin="anonymous"></script>    
+</html>

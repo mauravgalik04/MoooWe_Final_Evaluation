@@ -1,0 +1,343 @@
+body {
+background-color: #1a1a1a;
+}
+
+.movie-card {
+margin: auto;
+position: relative;
+width: 800px;
+height: 300px;
+border-radius: 15px;
+overflow: hidden;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+transition: transform 0.3s, box-shadow 0.3s;
+cursor: pointer;
+display: flex;
+}
+
+.movie-poster {
+flex: 0 0 100%;
+height: 100%;
+transition: all 0.3s;
+overflow: hidden;
+position: relative;
+}
+
+.movie-card:hover .movie-poster {
+flex: 0 0 30%;
+}
+
+.initial-image {
+position: absolute;
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: opacity 0.3s, transform 0.3s;
+}
+.hover-poster {
+position: absolute;
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: opacity 0.3s, transform 0.3s;
+background-color: rgba(0, 0, 0, 0.7);
+}
+.initial-image {
+opacity: 1;
+}
+
+.hover-poster {
+opacity: 0;
+}
+
+.movie-card:hover .initial-image {
+opacity: 0;
+transform: scale(1.1);
+}
+
+.movie-card:hover .hover-poster {
+opacity: 1;
+}
+
+.movie-content {
+flex: 0 0 70%;
+padding: 30px;
+color: white;
+z-index: 2;
+position: relative;
+transform: translateX(100%);
+opacity: 0;
+transition: all 0.3s ease-in-out;
+background: rgba(0, 0, 0, 0.7);
+backdrop-filter: blur(50px);
+}
+
+.movie-card:hover .movie-content {
+transform: translateX(0);
+opacity: 1;
+}
+
+.movie-title {
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 15px;
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.movie-rating {
+color: #ffd700;
+font-size: 18px;
+margin-bottom: 12px;
+}
+
+.movie-genre {
+display: inline-block;
+background: rgba(255, 255, 255, 0.2);
+padding: 5px 15px;
+border-radius: 20px;
+font-size: 12px;
+margin-bottom: 20px;
+}
+
+.movie-story {
+font-size: 14px;
+line-height: 1.5;
+opacity: 0.9;
+max-height: 150px;
+overflow-y: auto;
+padding-right: 10px;
+}
+
+.movie-story::-webkit-scrollbar {
+width: 5px;
+}
+
+.movie-story::-webkit-scrollbar-thumb {
+background: rgba(255, 255, 255, 0.3);
+border-radius: 5px;
+}
+.title-overlay {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: white;
+font-size: 2.5em;
+font-weight: bold;
+text-align: center;
+text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+z-index: 2;
+width: 80%;
+transition: opacity 0.3s;
+}
+.movie-card:hover .title-overlay {
+opacity: 0;
+}
+.movie-card:active {
+transform: scale(0.97);
+box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+.movie-poster::after {
+content: "";
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+opacity: 0.5;
+transition: opacity 0.3s;
+z-index: 1;
+}
+.movie-card:hover .movie-poster::after {
+opacity: 0;
+}
+#content-con {
+width: 100%;
+display: flex;
+justify-content: space-between;
+}
+#movie-container {
+display: flex;
+flex-direction: column;
+gap: 20px;
+width: 70%;
+margin: 0;
+padding: 20px;
+background: linear-gradient(90deg, #1c1c1c, #3d3d3d);
+}
+
+#watchlist-items {
+padding-bottom: 20px;
+}
+
+.watchlist-card {
+background: rgba(255, 255, 255, 0.05);
+margin-bottom: 15px;
+transition: transform 0.2s;
+}
+#watchlist-con {
+position: relative;
+right: 0;
+top: 0; /* Adjust this value based on your navbar height */
+height: auto;
+width: 30%;
+padding: 20px;
+color: white;
+background: rgba(0, 0, 0, 0.7);
+backdrop-filter: blur(10px);
+overflow-y: auto;
+z-index: 1;
+border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* .watchlist-btn {
+position: absolute;
+bottom: 20px;
+right: 20px;
+padding: 8px 20px;
+background: #ffd700;
+color: #000;
+border: none;
+border-radius: 20px;
+cursor: pointer;
+opacity: 0;
+transition: opacity 0.3s;
+font-weight: bold;
+} */
+
+.movie-content:hover .watchlist-btn {
+opacity: 1;
+}
+
+.watchlist-card {
+position: relative;
+display: flex;
+border-radius: 10px;
+gap: 15px;
+padding: 15px;
+margin-bottom: 15px;
+transition: transform 0.2s;
+background: rgba(255, 255, 255, 0.1);
+}
+.watchlist-card:hover {
+transform: scale(1.05);
+transition: transform 0.2s;
+}
+.watchlist-poster {
+width: 60px;
+height: 90px;
+object-fit: cover;
+border-radius: 5px;
+}
+.watchlist-poster:hover {
+scale: 1.2;
+}
+.watchlist-info {
+flex: 1;
+}
+
+.watchlist-title {
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+.watchlist-genre {
+font-size: 0.8em;
+opacity: 0.8;
+}
+
+.see-more {
+position: absolute;
+bottom: 10px;
+right: 10px;
+font-size: 0.8em;
+color: #ffd700;
+text-decoration: none;
+opacity: 0.7;
+}
+
+#watchlist-con {
+padding: 20px;
+color: black;
+}
+
+#watchlist-header {
+font-size: 1.5em;
+margin-bottom: 20px;
+padding-bottom: 10px;
+border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.button-group {
+position: absolute;
+bottom: 20px;
+right: 20px;
+display: flex;
+gap: 10px;
+z-index: 100;
+transition: opacity 0.3s ease-in-out; /* Smooth transition */
+}
+
+.watchlist-btn,
+.see-more-btn,
+.update-btn,
+.delete-btn {
+padding: 8px 15px;
+border: none;
+border-radius: 20px;
+cursor: pointer;
+opacity: 0.7;
+transition: opacity 0.3s;
+font-weight: bold;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+.movie-content:hover .button-group {
+opacity: 1;
+}
+.watchlist-btn {
+background: #ffd700;
+color: #000;
+}
+
+.see-more-btn {
+background: #4caf50;
+color: white;
+}
+
+.update-btn {
+background: #2196f3;
+color: white;
+}
+
+.delete-btn {
+background: #f44336;
+color: white;
+}
+
+.movie-content:hover .button-group button {
+opacity: 1;
+}
+
+/* Watchlist remove button */
+.remove-btn {
+position: absolute;
+top: 5px;
+right: 5px;
+width: 25px;
+height: 25px;
+background: red;
+color: white;
+border: none;
+border-radius: 50%;
+cursor: pointer;
+opacity: 0.8;
+transition: opacity 0.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.remove-btn:hover {
+opacity: 1;
+}

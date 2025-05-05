@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title_content %}MoooWe{% endblock %}</title>
+    <link rel="stylesheet" href="https://use.typekit.net/med7fre.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #121212;
+        color: white;
+        font-family: "archivo-black", sans-serif;
+      }
+
+      header {
+        background-color: #1e1e1e;
+        padding: 15px 40px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        position: sticky;
+        top: 0;
+        z-index: 999;
+      }
+
+      #navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .left-nav h3 {
+        font-size: 1.8rem;
+        color: gold;
+        letter-spacing: 1px;
+        text-decoration: none;
+      }
+      .nav-brand a {
+        text-decoration: none;
+      }
+      .nav-right {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .nav-link a {
+        position: relative;
+        color: white;
+        text-decoration: none;
+        font-size: 1.1rem;
+        padding: 8px 14px;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link a::after {
+        content: "";
+        position: absolute;
+        left: 14px;
+        bottom: 5px;
+        width: 0;
+        height: 2px;
+        background-color: gold;
+        transition: width 0.3s ease;
+      }
+
+      .nav-link a:hover::after {
+        width: calc(100% - 28px);
+      }
+
+      .nav-link a:hover {
+        color: gold;
+      }
+
+      .dropdown {
+        position: relative;
+      }
+
+      .dropdown-btn {
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: white;
+        padding: 8px 14px;
+        display: inline-block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: #2c2c2c;
+        min-width: 160px;
+        border-radius: 8px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background 0.3s;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      footer {
+        text-align: center;
+        padding: 30px 0;
+        background-color: #1e1e1e;
+        color: #aaa;
+        font-size: 0.9rem;
+      }
+      .dropdown-content a {
+        position: relative;
+        display: block;
+        padding: 10px 16px;
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .dropdown-content a::after {
+        content: "";
+        position: absolute;
+        left: 16px;
+        bottom: 8px;
+        width: 0;
+        height: 2px;
+        background-color: gold;
+        transition: width 0.3s ease;
+      }
+
+      .dropdown-content a:hover::after {
+        width: calc(100% - 32px);
+      }
+
+      .dropdown-content a:hover {
+        color: gold;
+      }
+      footer {
+        background-color: #1e1e1e; 
+        color: #aaa;
+        width: 100%; 
+        padding: 15px 40px; 
+        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.5); 
+        position: relative;
+        left: 0; 
+        overflow: hidden; 
+        margin: 0; 
+      }
+
+      .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 3rem;
+      }
+      .footer-bottom {
+        margin-top: 3rem;
+        padding: 15px 40px; 
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+      }
+
+      .footer-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .footer-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        padding-left: 0;
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 10px;
+      }
+
+      .footer-links a::before {
+        content: "▹";
+        position: absolute;
+        left: -12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        color: var(--primary);
+      }
+
+      .footer-links a:hover::before {
+        opacity: 1;
+      }
+
+      .footer-social {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .social-icon:hover {
+        background: var(--primary);
+        transform: translateY(-3px);
+      }
+
+      .footer-bottom {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+      }
+
+      .newsletter-form {
+        width: 50%;
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .newsletter-input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--light);
+      }
+
+      .newsletter-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        border: none;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: var(--light);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .newsletter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          padding: 1rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .hero {
+          min-height: 70vh;
+        }
+
+        .hero-content {
+          padding: 1rem;
+          text-align: center;
+        }
+
+        .hero-title {
+          font-size: 2.25rem;
+        }
+
+        .search-input {
+          padding-right: 120px;
+        }
+
+        .search-btn {
+          padding: 0.8rem 1.5rem;
+        }
+
+        .filters {
+          justify-content: center;
+        }
+
+        .movie-grid {
+          padding: 1rem;
+          gap: 1.5rem;
+        }
+
+        .modal-content {
+          padding: 1.5rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-right {
+          flex-direction: column;
+          gap: 10px;
+          align-items: flex-end;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div id="navbar">
+        <div class="left-nav">
+          <div class="nav-brand">
+            <a href="{% url 'movies_home_page' %}"><h3>MoooWe</h3></a>
+          </div>
+        </div>
+        <div class="nav-right">
+          <div class="nav-link">
+            <a href="{% url 'movies_home_page' %}">Home</a>
+          </div>
+          <div class="nav-link">
+            <a href="{% url 'movies_movies' %}">Movies</a>
+          </div>
+          <div class="nav-link">
+            <a href="{% url 'movies_genre' %}">Genres</a>
+          </div>
+          <div class="nav-link">
+            <a href="{% url 'booking_home' %}">Book Now</a>
+          </div>
+          {% if user.is_authenticated %}
+          <div class="dropdown nav-link">
+            <span class="dropdown-btn">{{ user.name }}</span>
+            <div class="dropdown-content">
+              <a href="{% url 'movies_profile'  %}">Profile</a>
+              {% if user.is_superuser %}
+              <a href="{% url 'movies_add_movie' %}">Add Movie</a>
+              {%endif%} {% if user.is_staff %}
+              <a href="{% url 'theatre_dashboard' %}">Theatre</a>
+              {% endif %}
+              <a href="{% url 'logout' %}">Logout</a>
+            </div>
+          </div>
+          {% else %}
+          <div class="nav-link">
+            <a href="{% url 'movies_login' %}">Login</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+    {% if messages %}
+    <div class="position-absolute top-0 end-0 p-3" style="z-index: 1055">
+      {% for message in messages %}
+      <div
+        class="toast show mb-2"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header bg-dark text-white">
+          <strong class="me-auto">MoooWe says</strong>
+          <small>just now</small>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body bg-light text-dark">{{ message }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %} {% block content %} {% endblock %}
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <a href="{% url 'movies_home_page' %}" class="logo">
+            <span>MoooWe</span>
+          </a>
+          <p class="text-gray-400">
+            Your ultimate destination for movies, TV shows, and entertainment
+            content. Discover, track, and share your favorite content.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-icon">
+              <svg
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                />
+              </svg>
+            </a>
+            <a href="#" class="social-icon">
+              <svg
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
+                />
+              </svg>
+            </a>
+            <a href="#" class="social-icon">
+              <svg
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h3 class="footer-title">Quick Links</h3>
+          <div class="footer-links">
+            <a href="{% url 'movies_home_page' %}">Home</a>
+            <a href="{% url 'movies_movies' %}">Movies</a>
+            <a href="#">Coming Soon</a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h3 class="footer-title">Categories</h3>
+          <div class="footer-links">
+            <a href="#">Action</a>
+            <a href="#">Comedy</a>
+            <a href="#">Drama</a>
+            <a href="#">Horror</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2025 MoooWe. All rights reserved.
+
+        </p>
+      </div>
+    </footer>
+
+    <script
+      src="https://kit.fontawesome.com/60c3389c89.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.querySelectorAll(".toast").forEach((toastEl) => {
+        new bootstrap.Toast(toastEl, { delay: 4000 }).show();
+      });
+    </script>
+  </body>
+</html>

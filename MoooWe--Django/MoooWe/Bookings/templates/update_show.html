@@ -1,0 +1,137 @@
+{% extends 'movies_base.html' %} {% load static %} {% block content %}
+<style>
+  main {
+    width: 100%;
+   padding-top: 15px;
+   padding-bottom: 50px;
+  }
+  .show-form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1rem;
+    color: white;
+    font-family: "archivo-black", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+  }
+
+  .show-form-container form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .show-form-container label {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  .show-form-container input,
+  .show-form-container select {
+    padding: 8px;
+    margin-top: 4px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .show-form-container button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: gold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .show-form-container button:hover {
+    background-color: greenyellow;
+    color: black;
+  }
+  .back-button {
+    position: sticky;
+    top: 10px;
+    left: 5px;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: gray;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+  }
+
+  .back-button:hover {
+    background-color: gold;
+    color: white;
+  }
+  .button-text {
+    display: none;
+  }
+  .back-button:hover .button-text {
+    width: 60px;
+    opacity: 1;
+    display: inline;
+  }
+
+  .button-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .button-text {
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+</style>
+
+<main>
+    <button
+    class="back-button"
+    onclick="window.history.back()"
+    aria-label="Go back"
+  >
+    <i class="fa-solid fa-backward"></i>
+    <span class="button-text">Go Back</span>
+  </button>
+  <div class="show-form-container">
+    <form action="{% url 'update_show' id=show.id %}" method="post">
+      {% csrf_token %}
+
+      <label for="movie_name">Movie Name: {{show.movie_name}}</label>
+      <input type="text" name="movie_name" id="movie_name" value="{{show.movie_name}}" required />
+
+      <label for="duration">Duration (minutes):</label>
+      <input type="number" name="duration" id="duration" value="{{show.duration}}" required min="1" />
+
+      <label for="show_time">Time of Show:</label>
+      <select name="show_time" id="show_time" required>
+        <option selected>{{show.time}}</option>
+        <option value="11:00am">Morning</option>
+        <option value="2:30pm">Afternoon</option>
+        <option value="8:00pm">Evening</option>
+      </select>
+
+      <label for="show_date">Date of Show:</label>
+      <input type="date" name="show_date" id="show_date" value="{{show.date}}" required />
+
+      <label for="poster">Movie Poster:</label>
+      <input type="file" name="poster" id="poster" accept="image/*" required value="{{show.poster}}" />
+
+      <button type="submit">Update Show</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,359 @@
+{% extends 'movies_base.html' %} 
+{% load static %} 
+{% block content %}
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  .background-image-con {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    overflow: hidden;
+  }
+
+  .background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(4px) brightness(0.7);
+  }
+
+  .content-con {
+    width: 100%;
+    background: transparent;
+    padding-top: 10px;
+    border-radius: 10px;
+    position: relative;
+    z-index: 5;
+  }
+
+  .listed-theatres {
+    width: 100%;
+    margin-top: 15px;
+    padding-bottom: 200px;
+    font-family: "archivo-black", sans-serif;
+    border-radius: 10px;
+  }
+
+  .search-bar {
+    display: block;
+    width: 90%;
+    margin: auto;
+    padding: 10px 5px;
+    border-radius: 10px;
+    font-size: 1rem;
+    z-index: 1000;
+    background-color: #fff;
+    position: relative;
+  }
+
+  .listing-title {
+    text-align: center;
+    color: white;
+    padding-top: 10px;
+    margin: 10px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .theater-card {
+    width: 80%;
+    margin: auto;
+    background: #1E1E1E;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+  }
+
+  .theater-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(187, 134, 252, 0.2);
+  }
+
+  .theater-image {
+    width: 250px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .theater-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .theater-name {
+    font-size: 24px;
+    color: #BB86FC;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+  }
+
+  .theater-address {
+    color: #B0B0B0;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .show-toggle-btn {
+    background-color: gray;
+    color: #121212;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+    width: fit-content;
+  }
+
+  .show-toggle-btn:hover {
+    background-color: gold;
+    color: #000;
+  }
+
+  .shows-container {
+    display: none;
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    animation: dropdownFade 0.3s ease-in-out;
+  }
+
+  @keyframes dropdownFade {
+    from {
+      opacity: 0;
+      max-height: 0;
+    }
+    to {
+      opacity: 1;
+      max-height: 1000px;
+    }
+  }
+
+  .shows-title {
+    color: #03DAC6;
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .movie-info {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.6) url('{% static "images/theatre-curtain.jpeg" %}') no-repeat center center;
+  background-size: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-info::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay to make text readable */
+  z-index: 0;
+}
+
+.movie-details,
+.facilities {
+  position: relative;
+  z-index: 1;
+}
+
+  .movie-details h4{
+    font-size: 1.2rem;
+    color: #BB86FC;
+  }
+  .facilities {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 150px;
+  }
+
+  .facility-tag {
+    background-color: #333;
+    color: #BB86FC;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 0.5rem;
+    text-align: center;
+    border: 1px solid #BB86FC;
+    transition: background 0.3s;
+  }
+
+  .facility-tag:hover {
+    background-color: #BB86FC;
+    color: #121212;
+  }
+
+  .show-time {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px 0;
+    border: 1px solid #0a0a0a;
+    border-radius: 8px;
+
+    cursor: pointer;
+    transition: all 0.3s;
+    background: gold;
+  }
+  .show-time a{
+    text-decoration: none;
+    color: black;
+  }
+
+  .show-time:hover {
+    background: gold;
+    color: #121212;
+    box-shadow: 0 0 15px rgba(189, 233, 57, 0.4);
+  }
+
+  .price-info {
+    color: #BB86FC;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .price-tag {
+    color: white;
+    font-weight: 600;
+  }
+
+  .no-show {
+    font-size: 0.8rem;
+    text-align: center;
+    margin: 30px;
+  }
+
+  @media (max-width: 768px) {
+    .theater-card {
+      flex-direction: column;
+    }
+
+    .theater-image {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .show-toggle-btn {
+      width: 100%;
+    }
+
+    .movie-info {
+      flex-direction: column;
+    }
+
+    .facilities {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+</style>
+
+<main>
+  <div class="background-image-con">
+    <img src="{% static 'images/theatre2.jpeg' %}" alt="theatre-background-image" class="background-image">
+  </div>
+  <div class="content-con">
+    <form action="" method="get">
+      <input
+        type="search"
+        class="search-bar"
+        name="searchbar"
+        placeholder="Search for a movie here ..."
+        value="{{ request.GET.searchbar }}"
+      />
+    </form>
+    <div class="listed-theatres">
+      <h2 class="listing-title">Listed Theatres</h2>
+      <div class="movie-card-container">
+        {% for t in theatres %}
+        <div class="theater-card">
+          <img src="{% static 'images/pvr.png' %}" alt="PVR Cinemas" class="theater-image"/>
+          <div class="theater-info">
+            <div>
+              <h2 class="theater-name">{{ t.name }}</h2>
+              <p class="theater-address">{{ t.location }}</p>
+              <p class="theatre-capacity">No of seats: {{ t.capacity }}</p>
+              <p class="price-info">
+                Gold: <span class="price-tag">{{ t.gold_price }}</span> |
+                Silver: <span class="price-tag">{{ t.silver_price }}</span> |
+                Bronze: <span class="price-tag">{{ t.bronze_price }}</span>
+              </p>
+            </div>
+            <button class="show-toggle-btn" type="button" onclick="toggleShows({{ t.id }})">See Available Shows</button>
+            <div class="shows-container" id="shows-{{ t.id }}">
+              <h3 class="shows-title">Shows Listed</h3>
+              {% for s in shows %}
+                {% if s.theatre_id == t.id %}
+                <div class="movie-info">
+                  <div class="movie-details">
+                    <h4>{{ s.movie_name }}</h4>
+                    <p>Duration • {{ s.duration }} mins</p>
+                    <p>Date : {{ s.date }}</p>
+                    <div class="show-time"> <a href="{% url 'book_show' theatre_id=t.id %}"> {{ s.time }}</a> </div>
+                  </div>
+                  <div class="facilities">
+                    <div class="facility-tag">Food/Beverages</div>
+                    <div class="facility-tag">Sound Padding</div>
+                    <div class="facility-tag">AC Available</div>
+                  </div>
+                </div>
+                {% endif %}
+              {% empty %}
+                <h3 class="no-show">No shows available for this theatre.</h3>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function toggleShows(id) {
+    const container = document.getElementById('shows-' + id);
+    container.style.display = container.style.display === 'block' ? 'none' : 'block';
+  }
+</script>
+{% endblock %}
