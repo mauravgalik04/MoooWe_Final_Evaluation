@@ -172,6 +172,16 @@ class MoviesResource(Resource):
         db.session.commit()
 
         return {"message": "Movie Added Successfully"}, 201
+class MovieGenreResource(Resource):
+    def get(self,genre):
+        all_movies = Movie.query.filter(genre == genre)
+        movies = []
+        for movie in all_movies:
+            movies.append(movie.as_dict())
+        if movies:
+            return {"movies":movies}
+        else:
+            return {"message":"No movie found in genre"}
 class User(db.Model , UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer , primary_key = True)
@@ -333,7 +343,7 @@ def profile():
 #Routes
 api.add_resource(MoviesResource, '/movies' , methods = ['POST' , "GET"])
 api.add_resource(MovieResource, '/movies/<int:sno>')
-
+api.add_resource(MovieGenreResource , '/movies/<string:genre>')
 
 if __name__=="__main__":
     app.run(debug=True )
